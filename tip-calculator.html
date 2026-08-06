@@ -39,7 +39,60 @@
     </div>
 
     <script>
-        / YOUR CODE WILL GO HERE
+        /* ================================================================
+           STEP 1 — the AI-generated calculation function.
+           Pure maths: no event listeners, no DOM, exactly as the prompt
+           in README.md demanded.
+           ================================================================ */
+        function calculateBillTotals(bill, tipPercentage) {
+            var tipAmount = bill * tipPercentage / 100;
+            var grandTotal = bill + tipAmount;
+
+            // Round each value to 2 decimals, both derived from the UNROUNDED
+            // tip. Rounding the tip first and then adding can disagree with
+            // this by a cent on some inputs — see AUDIT-NOTES.md.
+            //
+            // These are returned as NUMBERS. toFixed() would return strings,
+            // and the assignment asks for an object of values, not text. The
+            // "$0.00" formatting happens in the display layer below.
+            return {
+                tipAmount: Math.round(tipAmount * 100) / 100,
+                grandTotal: Math.round(grandTotal * 100) / 100
+            };
+        }
+
+        /* ================================================================
+           STEP 2 — implement and connect. Written by hand.
+           ================================================================ */
+        var billInput = document.getElementById("billAmount");
+        var tipInput = document.getElementById("tipPercent");
+        var calcButton = document.getElementById("calcBtn");
+        var tipResultEl = document.getElementById("tipResult");
+        var totalResultEl = document.getElementById("totalResult");
+
+        calcButton.addEventListener("click", function () {
+            // CRUCIAL: input .value is ALWAYS a string. Without parseFloat,
+            // "50" + "10" would concatenate to "5010" instead of adding.
+            var billValue = parseFloat(billInput.value);
+            var tipValue = parseFloat(tipInput.value);
+
+            // An empty field parses to NaN, which would render "$NaN".
+            // Guard here in the display layer so the maths function stays
+            // pure, as the prompt required.
+            if (!isFinite(billValue)) {
+                billValue = 0;
+            }
+            if (!isFinite(tipValue)) {
+                tipValue = 0;
+            }
+
+            var totals = calculateBillTotals(billValue, tipValue);
+
+            // toFixed(2) guarantees two decimals on screen, so 15 shows as
+            // "15.00" rather than "15".
+            tipResultEl.textContent = "$" + totals.tipAmount.toFixed(2);
+            totalResultEl.textContent = "$" + totals.grandTotal.toFixed(2);
+        });
     </script>
 </body>
 </html>
