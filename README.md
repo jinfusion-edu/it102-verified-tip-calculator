@@ -46,7 +46,7 @@ pre-filled with `15`, a green **Calculate Total** button, and a results box.
 
 ## Live URL
 
-https://jinfusion-edu.github.io/it102-verified-tip-calculator/
+https://edu.jinfusion.dev/it102-verified-tip-calculator/
 
 ## AI collaboration — tool and prompt
 
